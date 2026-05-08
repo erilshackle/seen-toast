@@ -146,9 +146,12 @@
 
 /* Conteúdo */
 .seen-toast .content {
-  flex: 1;
   min-width: 0;
-  padding-right: 24px; /* Space for close button */
+  width: 100%;
+  padding-right: 36px;
+
+  display: flex;
+  flex-direction: column;
 }
 
 .seen-toast .title {
@@ -168,27 +171,30 @@
 /* Actions - Layout responsivo */
 .seen-toast .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
 
-/* Quando tem mais de uma action, fica em linha quebrando */
-.seen-toast .actions.actions-column {
-  flex-direction: row;
-  flex-wrap: wrap;
+  margin-top: 12px;
 }
 
 .seen-toast .actions button {
+  width: auto;
+  flex: 0 0 auto;
+
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px 12px;
+
+  padding: 7px 12px;
+
   font-size: 0.75rem;
   font-weight: 500;
-  border-radius: 6px;
+
+  border-radius: 8px;
+
   transition: all 0.2s ease;
+
+  white-space: nowrap;
 }
 
 .light .actions button {

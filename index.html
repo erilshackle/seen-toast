@@ -1,674 +1,319 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seen Toast - Biblioteca de Notificações Moderna</title>
-  
+
+  <title>SeenToast Demo</title>
+
+
   <style>
     * {
-      margin: 0;
-      padding: 0;
       box-sizing: border-box;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 20px;
+      margin: 0;
+      padding: 40px;
+      font-family: Inter, sans-serif;
+      background: #0f172a;
+      color: white;
     }
 
-    .container {
-      max-width: 1400px;
+    h1 {
+      margin-top: 0;
+      font-size: 2rem;
+    }
+
+    .wrapper {
+      max-width: 1200px;
       margin: 0 auto;
     }
 
-    /* Header */
-    .header {
-      text-align: center;
-      margin-bottom: 40px;
-      padding: 40px 20px;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 24px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    }
-
-    .header h1 {
-      font-size: 3rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 12px;
-    }
-
-    .header p {
-      color: #666;
-      font-size: 1.1rem;
-    }
-
-    .badge {
-      display: inline-block;
-      background: #667eea;
-      color: white;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      margin-top: 12px;
-    }
-
-    /* Grid layout */
-    .demo-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 24px;
-      margin-bottom: 40px;
+      grid-template-columns: 350px 1fr;
+      gap: 32px;
+      margin-top: 32px;
     }
 
-    /* Cards */
-    .card {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
+    .panel {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
       padding: 24px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(10px);
-      transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    .card h2 {
-      font-size: 1.5rem;
+    .panel h2 {
+      margin-top: 0;
       margin-bottom: 20px;
-      color: #333;
-      border-left: 4px solid #667eea;
-      padding-left: 12px;
+      font-size: 1rem;
     }
 
-    .card h3 {
-      font-size: 0.9rem;
-      color: #666;
-      margin: 16px 0 8px 0;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .field {
+      margin-bottom: 18px;
     }
 
-    /* Button groups */
-    .button-group {
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
+      color: white;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .row {
       display: flex;
-      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .row .field {
+      flex: 1;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
+    }
+
+    .checkbox input {
+      width: auto;
     }
 
     button {
-      padding: 10px 20px;
-      border-radius: 10px;
       border: none;
-      font-size: 0.9rem;
-      font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-weight: 600;
+      width: 100%;
+      background: white;
+      color: black;
+      transition: 0.2s;
     }
 
     button:hover {
-      transform: translateY(-2px);
-      filter: brightness(0.95);
+      opacity: 0.9;
     }
 
-    button:active {
-      transform: translateY(0);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-
-    .btn-success {
-      background: #22c55e;
-      color: white;
-    }
-
-    .btn-error {
-      background: #ef4444;
-      color: white;
-    }
-
-    .btn-warning {
-      background: #f59e0b;
-      color: white;
-    }
-
-    .btn-info {
-      background: #3b82f6;
-      color: white;
-    }
-
-    .btn-dark {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    .btn-light {
-      background: #f3f4f6;
-      color: #333;
-      border: 1px solid #ddd;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid #667eea;
-      color: #667eea;
-    }
-
-    .btn-outline:hover {
-      background: #667eea;
-      color: white;
-    }
-
-    /* Position badges */
-    .position-demo {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .position-btn {
-      font-size: 0.8rem;
-      padding: 8px;
-      background: #f3f4f6;
-      color: #333;
-    }
-
-    .position-btn:hover {
-      background: #667eea;
-      color: white;
-    }
-
-    /* Code block */
-    .code-block {
-      background: #1e1e1e;
-      color: #d4d4d4;
-      padding: 16px;
-      border-radius: 12px;
-      overflow-x: auto;
-      font-family: 'Courier New', monospace;
-      font-size: 0.85rem;
-      margin-top: 16px;
-    }
-
-    .code-block pre {
-      margin: 0;
-    }
-
-    /* Actions demo */
-    .action-demo {
+    .preview {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
     }
 
-    .toast-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px;
-      background: #f9fafb;
-      border-radius: 10px;
+    .help {
+      opacity: 0.7;
+      font-size: 14px;
+      line-height: 1.6;
     }
 
-    /* Stats */
-    .stats {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      padding: 24px;
-      text-align: center;
+    code {
+      background: rgba(255,255,255,0.08);
+      padding: 2px 6px;
+      border-radius: 6px;
     }
 
-    .stats-buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      body {
-        padding: 12px;
-      }
-      
-      .header h1 {
-        font-size: 2rem;
-      }
-      
-      .demo-grid {
+    @media (max-width: 900px) {
+      .grid {
         grid-template-columns: 1fr;
       }
-    }
-
-    /* Input styles */
-    input, select {
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-family: inherit;
-      margin-top: 8px;
-      width: 100%;
-    }
-
-    .form-group {
-      margin-bottom: 12px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.85rem;
-      color: #666;
-      margin-bottom: 4px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <h1>✨ Seen Toast</h1>
-      <p>Biblioteca de notificações moderna e elegante</p>
-      <div class="badge">v1.0.0</div>
-    </div>
 
-    <div class="demo-grid">
-      <!-- Basic Examples -->
-      <div class="card">
-        <h2>📢 Tipos Básicos</h2>
-        <div class="button-group">
-          <button class="btn-success" id="demo-success">✅ Success</button>
-          <button class="btn-error" id="demo-error">❌ Error</button>
-          <button class="btn-warning" id="demo-warning">⚠️ Warning</button>
-          <button class="btn-info" id="demo-info">ℹ️ Info</button>
-        </div>
-        
-        <h3>Com Título</h3>
-        <div class="button-group">
-          <button class="btn-primary" id="demo-title-success">Sucesso</button>
-          <button class="btn-primary" id="demo-title-error">Erro</button>
-        </div>
-      </div>
+<div class="wrapper">
 
-      <!-- Positions -->
-      <div class="card">
-        <h2>📍 Posições</h2>
-        <div class="position-demo">
-          <button class="position-btn" data-position="top-left">Top Left</button>
-          <button class="position-btn" data-position="top-center">Top Center</button>
-          <button class="position-btn" data-position="top-right">Top Right</button>
-          <button class="position-btn" data-position="bottom-left">Bottom Left</button>
-          <button class="position-btn" data-position="bottom-center">Bottom Center</button>
-          <button class="position-btn" data-position="bottom-right">Bottom Right</button>
-        </div>
-        
-        <h3>Temas</h3>
-        <div class="button-group">
-          <button class="btn-light" id="theme-light">🌞 Light</button>
-          <button class="btn-dark" id="theme-dark">🌙 Dark</button>
-        </div>
-      </div>
+  <h1>SeenToast Playground</h1>
 
-      <!-- Duration & Behavior -->
-      <div class="card">
-        <h2>⏱️ Comportamento</h2>
-        <div class="button-group">
-          <button class="btn-primary" id="duration-short">1 segundo</button>
-          <button class="btn-primary" id="duration-long">5 segundos</button>
-          <button class="btn-primary" id="duration-infinite">∞ Infinito</button>
-        </div>
-        
-        <div class="button-group">
-          <button class="btn-primary" id="no-pause">⏸️ Sem pause no hover</button>
-          <button class="btn-primary" id="no-close">❌ Sem botão fechar</button>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="card">
-        <h2>🎯 Ações</h2>
-        <div class="action-demo">
-          <button class="btn-primary" id="actions-undo">↩️ Com Undo</button>
-          <button class="btn-primary" id="actions-confirm">✅ Com Confirmar</button>
-          <button class="btn-primary" id="actions-multiple">🔘 Múltiplas ações</button>
-        </div>
-      </div>
-
-      <!-- Custom Content -->
-      <div class="card">
-        <h2>🎨 Customização</h2>
-        <div class="form-group">
-          <label>Mensagem personalizada</label>
-          <input type="text" id="custom-message" placeholder="Digite sua mensagem" value="Mensagem personalizada!">
-        </div>
-        <div class="form-group">
-          <label>Título (opcional)</label>
-          <input type="text" id="custom-title" placeholder="Título">
-        </div>
-        <button class="btn-primary" id="custom-toast">Mostrar Toast</button>
-      </div>
-
-      <!-- Stack & Management -->
-      <div class="card">
-        <h2>📚 Gerenciamento</h2>
-        <div class="button-group">
-          <button class="btn-primary" id="stack-multiple">Empilhar 5 toasts</button>
-          <button class="btn-primary" id="clear-all">🗑️ Limpar todos</button>
-          <button class="btn-primary" id="clear-top">🗑️ Limpar top-right</button>
-        </div>
-        <div class="button-group">
-          <button class="btn-outline" id="update-toast">🔄 Atualizar último toast</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Stats & Control -->
-    <div class="stats">
-      <h3 style="margin-bottom: 16px;">⚡ Controles Rápidos</h3>
-      <div class="stats-buttons">
-        <button class="btn-success" id="mass-success">Mensagem de Sucesso</button>
-        <button class="btn-error" id="mass-error">Mensagem de Erro</button>
-        <button class="btn-primary" id="mass-random">🎲 Aleatório</button>
-      </div>
-      
-      <!-- Code Example -->
-      <div class="code-block">
-        <pre><code>// Uso básico
-Seen.toast({
-  message: "Olá mundo!",
-  type: "success",
-  position: "bottom-center"
-});
-
-// Com helpers
-Seen.toast.success("Operação concluída!");
-Seen.toast.error("Algo deu errado!");</code></pre>
-      </div>
-    </div>
+  <div class="help">
+    Customize and preview toast notifications in real time.
   </div>
 
-  <script type="module">
-    import { Seen, initSeen } from "./src/index.ts";
+  <div class="grid">
 
-    // Inicializar a lib
-    initSeen();
+    <div class="panel">
 
-    // Helper function para mostrar toast com configurações
-    function showToast(options) {
-      return Seen.toast(options);
-    }
+      <h2>Toast Options</h2>
 
-    // 1. Tipos Básicos
-    document.getElementById("demo-success").onclick = () => {
-      Seen.toast.success("Operação realizada com sucesso!");
-    };
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="title" placeholder="Notification title" />
+      </div>
 
-    document.getElementById("demo-error").onclick = () => {
-      Seen.toast.error("Falha ao processar requisição");
-    };
+      <div class="field">
+        <label>Message</label>
+        <textarea id="message">This is a SeenToast notification.</textarea>
+      </div>
 
-    document.getElementById("demo-warning").onclick = () => {
-      Seen.toast.warning("Atenção! Verifique os dados antes de continuar");
-    };
+      <div class="row">
+        <div class="field">
+          <label>Type</label>
 
-    document.getElementById("demo-info").onclick = () => {
-      Seen.toast.info("Bem-vindo à demonstração do Seen Toast");
-    };
+          <select id="type">
+            <option value="success">success</option>
+            <option value="error">error</option>
+            <option value="warning">warning</option>
+            <option value="info">info</option>
+          </select>
+        </div>
 
-    // Com título
-    document.getElementById("demo-title-success").onclick = () => {
-      Seen.toast({
-        title: "Upload Concluído",
-        message: "Seu arquivo foi enviado com sucesso",
-        type: "success"
-      });
-    };
+        <div class="field">
+          <label>Theme</label>
 
-    document.getElementById("demo-title-error").onclick = () => {
-      Seen.toast({
-        title: "Falha na Conexão",
-        message: "Verifique sua internet e tente novamente",
-        type: "error"
-      });
-    };
+          <select id="theme">
+            <option value="light">light</option>
+            <option value="dark" selected>dark</option>
+          </select>
+        </div>
+      </div>
 
-    // 2. Posições
-    document.querySelectorAll("[data-position]").forEach(btn => {
-      btn.onclick = () => {
-        const position = btn.getAttribute("data-position");
-        Seen.toast({
-          message: `Toast na posição ${position}`,
-          position: position,
-          type: "info"
-        });
-      };
-    });
+      <div class="row">
+        <div class="field">
+          <label>Position</label>
 
-    // Temas
-    document.getElementById("theme-light").onclick = () => {
-      Seen.toast({
-        message: "Tema claro ativado",
-        theme: "light",
-        type: "info"
-      });
-    };
+          <select id="position">
+            <option value="top-left">top-left</option>
+            <option value="top-center">top-center</option>
+            <option value="top-right">top-right</option>
+            <option value="bottom-left">bottom-left</option>
+            <option value="bottom-center" selected>bottom-center</option>
+            <option value="bottom-right">bottom-right</option>
+          </select>
+        </div>
 
-    document.getElementById("theme-dark").onclick = () => {
-      Seen.toast({
-        message: "Tema escuro ativado",
-        theme: "dark",
-        type: "info"
-      });
-    };
+        <div class="field">
+          <label>Duration (ms)</label>
+          <input type="number" id="duration" value="4000" />
+        </div>
+      </div>
 
-    // 3. Duração
-    document.getElementById("duration-short").onclick = () => {
-      Seen.toast({
-        message: "Este toast desaparece em 1 segundo!",
-        duration: 1000,
-        type: "warning"
-      });
-    };
+      <div class="checkbox">
+        <input type="checkbox" id="closable" checked />
+        <label for="closable">Closable</label>
+      </div>
 
-    document.getElementById("duration-long").onclick = () => {
-      Seen.toast({
-        message: "Este toast dura 5 segundos",
-        duration: 5000,
-        type: "info"
-      });
-    };
+      <div class="checkbox">
+        <input type="checkbox" id="pauseOnHover" checked />
+        <label for="pauseOnHover">Pause on hover</label>
+      </div>
 
-    document.getElementById("duration-infinite").onclick = () => {
-      const toast = Seen.toast({
-        message: "Este toast nunca desaparece automaticamente. Clique no X para fechar!",
-        duration: 0,
-        type: "warning",
-        closable: true
-      });
-    };
+      <div class="checkbox">
+        <input type="checkbox" id="showIcon" checked />
+        <label for="showIcon">Show icon</label>
+      </div>
 
-    document.getElementById("no-pause").onclick = () => {
-      Seen.toast({
-        message: "Este toast NÃO pausa no hover",
-        duration: 3000,
-        pauseOnHover: false,
-        type: "info"
-      });
-    };
+      <div class="checkbox">
+        <input type="checkbox" id="actions" />
+        <label for="actions">Add action buttons</label>
+      </div>
 
-    document.getElementById("no-close").onclick = () => {
-      Seen.toast({
-        message: "Este toast não tem botão de fechar",
-        closable: false,
-        duration: 3000,
-        type: "info"
-      });
-    };
+      <button id="showToast">
+        Show Toast
+      </button>
 
-    // 4. Ações
-    document.getElementById("actions-undo").onclick = () => {
-      Seen.toast({
-        title: "Item removido",
-        message: "O item foi movido para a lixeira",
-        type: "success",
-        actions: [
-          {
-            label: "Desfazer",
-            onClick: (id) => {
-              console.log("Undo clicked for toast:", id);
-              alert("Ação desfeita!");
+    </div>
+
+    <div class="panel preview">
+
+      <h2>Usage Example</h2>
+
+      <pre><code id="codePreview"></code></pre>
+
+      <div class="help">
+        Progress bar is automatically hidden for durations below <code>2000ms</code>.
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module">
+  import Seen, { initSeen } from "./src/index.ts";
+
+  initSeen();
+
+  const codePreview = document.getElementById("codePreview");
+
+  function getOptions() {
+    const withActions = document.getElementById("actions").checked;
+
+    return {
+      title: document.getElementById("title").value,
+      message: document.getElementById("message").value,
+      type: document.getElementById("type").value,
+      theme: document.getElementById("theme").value,
+      position: document.getElementById("position").value,
+      duration: Number(document.getElementById("duration").value),
+      closable: document.getElementById("closable").checked,
+      pauseOnHover: document.getElementById("pauseOnHover").checked,
+      showIcon: document.getElementById("showIcon").checked,
+
+      actions: withActions
+        ? [
+            {
+              label: "Cancel",
+              onClick: () => console.log("cancel")
+            },
+            {
+              label: "Confirm",
+              onClick: () => console.log("confirm")
             }
-          }
-        ]
-      });
+          ]
+        : []
     };
+  }
 
-    document.getElementById("actions-confirm").onclick = () => {
-      Seen.toast({
-        title: "Excluir arquivo?",
-        message: "Esta ação não pode ser desfeita",
-        type: "warning",
-        duration: 0,
-        actions: [
-          {
-            label: "Cancelar",
-            onClick: (id) => {
-              console.log("Canceled");
-            }
-          },
-          {
-            label: "Excluir",
-            onClick: (id) => {
-              alert("Arquivo excluído!");
-            }
-          }
-        ]
-      });
-    };
+  function updateCodePreview() {
+    const options = getOptions();
 
-    document.getElementById("actions-multiple").onclick = () => {
-      Seen.toast({
-        title: "Nova atualização disponível",
-        message: "Versão 2.0.0 pronta para instalar",
-        type: "info",
-        duration: 10000,
-        actions: [
-          {
-            label: "Agora",
-            onClick: () => alert("Atualizando...")
-          },
-          {
-            label: "Depois",
-            onClick: () => console.log("Later")
-          },
-          {
-            label: "Saiba mais",
-            onClick: () => window.open("https://github.com", "_blank")
-          }
-        ]
-      });
-    };
+    codePreview.textContent =
+`Seen.toast(${JSON.stringify(options, null, 2)});`;
+  }
 
-    // 5. Customização
-    document.getElementById("custom-toast").onclick = () => {
-      const message = document.getElementById("custom-message").value;
-      const title = document.getElementById("custom-title").value;
-      
-      Seen.toast({
-        title: title || undefined,
-        message: message,
-        type: "info",
-        duration: 4000
-      });
-    };
+  [
+    "title",
+    "message",
+    "type",
+    "theme",
+    "position",
+    "duration",
+    "closable",
+    "pauseOnHover",
+    "showIcon",
+    "actions"
+  ].forEach(id => {
+    document.getElementById(id).addEventListener("input", updateCodePreview);
+    document.getElementById(id).addEventListener("change", updateCodePreview);
+  });
 
-    // 6. Gerenciamento
-    document.getElementById("stack-multiple").onclick = () => {
-      for (let i = 1; i <= 5; i++) {
-        setTimeout(() => {
-          Seen.toast({
-            message: `Toast #${i} - Isso demonstra o empilhamento`,
-            type: "info",
-            position: "top-right"
-          });
-        }, i * 200);
-      }
-    };
+  updateCodePreview();
 
-    document.getElementById("clear-all").onclick = () => {
-      Seen.clearAll();
-      Seen.toast.success("Todos os toasts foram removidos!");
-    };
+  document.getElementById("showToast").addEventListener("click", () => {
+    Seen.toast(getOptions());
+  });
+</script>
 
-    document.getElementById("clear-top").onclick = () => {
-      Seen.clearPosition("top-right");
-      Seen.toast.info("Toasts da posição top-right foram limpos!");
-    };
-
-    let lastToastId = null;
-    document.getElementById("update-toast").onclick = () => {
-      if (lastToastId) {
-        // Aqui você implementaria a lógica de update
-        Seen.toast.info("Funcionalidade de update em desenvolvimento!");
-      } else {
-        const toast = Seen.toast({
-          message: "Toast para atualizar",
-          duration: 10000
-        });
-        lastToastId = toast;
-        setTimeout(() => {
-          Seen.toast.info("Este toast pode ser atualizado!");
-        }, 1000);
-      }
-    };
-
-    // 7. Mass Random
-    const messages = [
-      "🍕 Pizza entregue!",
-      "📧 Novo e-mail recebido",
-      "💾 Backup concluído",
-      "🔔 Lembrete: Reunião em 10min",
-      "🎉 Parabéns! Você ganhou um cupom",
-      "⚠️ Bateria fraca",
-      "✅ Sincronização completa"
-    ];
-
-    document.getElementById("mass-random").onclick = () => {
-      const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-      const types = ["success", "error", "warning", "info"];
-      const randomType = types[Math.floor(Math.random() * types.length)];
-      
-      Seen.toast({
-        message: randomMessage,
-        type: randomType,
-        duration: 2000
-      });
-    };
-
-    document.getElementById("mass-success").onclick = () => {
-      Seen.toast.success("Operação bem-sucedida!");
-    };
-
-    document.getElementById("mass-error").onclick = () => {
-      Seen.toast.error("Erro ao processar!");
-    };
-
-    // Log inicial
-    console.log("Seen Toast Demo inicializada!", Seen);
-  </script>
 </body>
 </html>
