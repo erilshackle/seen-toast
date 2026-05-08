@@ -23,6 +23,7 @@ export interface ToastOptions {
   closable?: boolean;
   actions?: ToastAction[];
   className?: string;
+  showIcon?: boolean; // Nova opção: mostrar ou não o ícone
   onDismiss?: (toastId: string) => void;
   onShow?: (toastId: string) => void;
 }

@@ -17,6 +17,7 @@ export function toast(options: ToastOptions) {
     closable: options.closable ?? true,
     actions: options.actions ?? [],
     className: options.className ?? "",
+    showIcon: options.showIcon ?? true, // Padrão: mostrar ícone
     createdAt: Date.now(),
     onDismiss: options.onDismiss,
     onShow: options.onShow

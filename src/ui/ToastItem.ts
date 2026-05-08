@@ -9,34 +9,134 @@ export function createToastElement(toast: Toast): HTMLElement {
   el.setAttribute("role", "alert");
   el.setAttribute("aria-live", "polite");
 
-  // Build inner HTML
-  const actionsHtml = toast.actions.length > 0 || toast.closable
-    ? `<div class="actions">
-        ${toast.actions.map(action => `<button class="action-btn ${action.className || ""}">${action.label}</button>`).join("")}
-        ${toast.closable ? `<button class="close" aria-label="Close toast">✕</button>` : ""}
+  // Icon option (only show if duration > 0 or explicitly true)
+  const showIcon = (toast as any).showIcon !== false;
+  const iconHtml = showIcon ? `<div class="icon">${icons[toast.type]}</div>` : '';
+
+  // Build actions HTML
+  const hasActions = toast.actions.length > 0;
+  const actionsHtml = hasActions || toast.closable
+    ? `<div class="actions ${hasActions && toast.actions.length > 1 ? 'actions-column' : ''}">
+        ${toast.actions.map(action => `<button class="action-btn ${action.className || ""}">${escapeHtml(action.label)}</button>`).join("")}
        </div>`
     : "";
 
+  // Close button HTML (top right)
+  const closeHtml = toast.closable 
+    ? `<button class="close-btn" aria-label="Close toast">✕</button>` 
+    : "";
+
   el.innerHTML = `
-    <div class="icon">${icons[toast.type]}</div>
+    ${closeHtml}
+    ${iconHtml}
     <div class="content">
       ${toast.title ? `<div class="title">${escapeHtml(toast.title)}</div>` : ""}
       <div class="message">${escapeHtml(toast.message)}</div>
+      ${actionsHtml}
     </div>
-    ${actionsHtml}
     ${toast.duration > 0 ? '<div class="progress-bar"></div>' : ""}
   `;
 
-  // Setup progress bar
+  // Variables for timer management
+  let timeoutId: number | null = null;
+  let animationFrameId: number | null = null;
+  let startTime: number;
+  let remaining: number;
+  let isPaused = false;
+
+  // Setup progress bar only if duration > 0
   if (toast.duration > 0) {
     const progressBar = el.querySelector(".progress-bar") as HTMLElement;
-    if (progressBar) {
-      progressBar.style.animation = `progress ${toast.duration}ms linear forwards`;
+    remaining = toast.duration;
+    
+    // Function to update progress bar width
+    const updateProgress = () => {
+      if (!progressBar || isPaused) return;
+      
+      const elapsed = Date.now() - startTime;
+      const progress = Math.max(0, (remaining - elapsed) / remaining);
+      progressBar.style.transform = `scaleX(${progress})`;
+      
+      if (progress <= 0) {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        return;
+      }
+      
+      animationFrameId = requestAnimationFrame(updateProgress);
+    };
+    
+    // Function to start/resume the timer
+    const startTimer = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      
+      startTime = Date.now();
+      updateProgress();
+      
+      timeoutId = window.setTimeout(() => {
+        dismissWithAnimation(el, toast.id);
+      }, remaining);
+    };
+    
+    // Function to pause the timer
+    const pauseTimer = () => {
+      if (isPaused) return;
+      isPaused = true;
+      
+      // Clear timeout
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      
+      // Cancel animation frame
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      
+      // Calculate remaining time
+      const elapsed = Date.now() - startTime;
+      remaining = Math.max(0, remaining - elapsed);
+      
+      // Keep progress bar at current position
+      if (progressBar) {
+        const progress = remaining / toast.duration;
+        progressBar.style.transform = `scaleX(${progress})`;
+      }
+    };
+    
+    // Function to resume the timer
+    const resumeTimer = () => {
+      if (!isPaused) return;
+      isPaused = false;
+      
+      if (remaining <= 0) {
+        dismissWithAnimation(el, toast.id);
+        return;
+      }
+      
+      startTimer();
+    };
+    
+    // Add hover listeners if pauseOnHover is enabled
+    if (toast.pauseOnHover) {
+      el.addEventListener("mouseenter", pauseTimer);
+      el.addEventListener("mouseleave", resumeTimer);
     }
+    
+    // Start the timer
+    startTimer();
+    
+    // Store cleanup function
+    (el as any)._cleanupTimers = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
   }
 
   // Handle close button
-  const closeBtn = el.querySelector(".close");
+  const closeBtn = el.querySelector(".close-btn");
   if (closeBtn) {
     closeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -52,57 +152,13 @@ export function createToastElement(toast: Toast): HTMLElement {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         action.onClick(toast.id);
-        // Dismiss after action if not persisting
-        if (toast.duration > 0) {
+        // Dismiss after action click
+        if ((action as any).dismiss !== false) {
           dismissWithAnimation(el, toast.id);
         }
       });
     }
   });
-
-  // Handle pause on hover
-  if (toast.pauseOnHover && toast.duration > 0) {
-    let progressBar = el.querySelector(".progress-bar") as HTMLElement;
-    if (progressBar) {
-      let animation = progressBar.getAnimations()[0];
-      
-      el.addEventListener("mouseenter", () => {
-        if (animation) {
-          animation.pause();
-        }
-      });
-      
-      el.addEventListener("mouseleave", () => {
-        if (animation) {
-          animation.play();
-        }
-      });
-    }
-  }
-
-  // Handle window blur pause
-  if (toast.pauseOnWindowBlur && toast.duration > 0) {
-    let progressBar = el.querySelector(".progress-bar") as HTMLElement;
-    if (progressBar) {
-      let animation = progressBar.getAnimations()[0];
-      
-      const handleBlur = () => animation?.pause();
-      const handleFocus = () => animation?.play();
-      
-      window.addEventListener("blur", handleBlur);
-      window.addEventListener("focus", handleFocus);
-      
-      // Cleanup listeners when toast is removed
-      const observer = new MutationObserver(() => {
-        if (!document.body.contains(el)) {
-          window.removeEventListener("blur", handleBlur);
-          window.removeEventListener("focus", handleFocus);
-          observer.disconnect();
-        }
-      });
-      observer.observe(document.body, { childList: true, subtree: true });
-    }
-  }
 
   // Trigger enter animation
   requestAnimationFrame(() => {
@@ -115,6 +171,11 @@ export function createToastElement(toast: Toast): HTMLElement {
 
 function dismissWithAnimation(el: HTMLElement, toastId: string) {
   if (el.classList.contains("exit")) return;
+  
+  // Cleanup timers
+  if ((el as any)._cleanupTimers) {
+    (el as any)._cleanupTimers();
+  }
   
   el.classList.add("exit");
   const handleAnimationEnd = () => {
