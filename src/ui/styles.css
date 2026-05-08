@@ -1,0 +1,274 @@
+/* Variáveis CSS para temas */
+:root {
+  --toast-bg-light: rgba(255, 255, 255, 0.95);
+  --toast-text-light: #1a1a1a;
+  --toast-border-light: rgba(0, 0, 0, 0.08);
+  --toast-shadow-light: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+  
+  --toast-bg-dark: rgba(18, 18, 18, 0.95);
+  --toast-text-dark: #e5e5e5;
+  --toast-border-dark: rgba(255, 255, 255, 0.1);
+  --toast-shadow-dark: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  
+  --toast-success: #22c55e;
+  --toast-error: #ef4444;
+  --toast-warning: #f59e0b;
+  --toast-info: #3b82f6;
+  
+  --toast-border-radius: 12px;
+  --toast-padding: 16px;
+  --toast-gap: 12px;
+}
+
+/* Container principal com animação de entrada/saída */
+.seen-container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 9999;
+  pointer-events: none;
+  max-height: 100vh;
+  overflow: visible;
+}
+
+/* Posicionamentos */
+.top-left { top: 20px; left: 20px; align-items: flex-start; }
+.top-center { top: 20px; left: 50%; transform: translateX(-50%); align-items: center; }
+.top-right { top: 20px; right: 20px; align-items: flex-end; }
+.bottom-left { bottom: 20px; left: 20px; align-items: flex-start; flex-direction: column-reverse; }
+.bottom-center { bottom: 20px; left: 50%; transform: translateX(-50%); align-items: center; flex-direction: column-reverse; }
+.bottom-right { bottom: 20px; right: 20px; align-items: flex-end; flex-direction: column-reverse; }
+
+/* Toast individual */
+.seen-toast {
+  width: 360px;
+  max-width: calc(100vw - 40px);
+  padding: var(--toast-padding);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--toast-gap);
+  border-radius: var(--toast-border-radius);
+  pointer-events: auto;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--toast-shadow-light);
+  will-change: transform, opacity;
+  transition: all 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tema Light */
+.seen-toast.light {
+  background: var(--toast-bg-light);
+  color: var(--toast-text-light);
+  border: 1px solid var(--toast-border-light);
+}
+
+/* Tema Dark */
+.seen-toast.dark {
+  background: var(--toast-bg-dark);
+  color: var(--toast-text-dark);
+  border: 1px solid var(--toast-border-dark);
+  box-shadow: var(--toast-shadow-dark);
+}
+
+/* Animações */
+.seen-toast.enter {
+  animation: toastSlideIn 0.3s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+}
+
+.seen-toast.exit {
+  animation: toastSlideOut 0.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/* Animações específicas por posição */
+.top-left .seen-toast.enter { animation-name: toastSlideInLeft; }
+.top-right .seen-toast.enter { animation-name: toastSlideInRight; }
+.top-center .seen-toast.enter { animation-name: toastSlideInTop; }
+.bottom-left .seen-toast.exit { animation-name: toastSlideOutLeft; }
+.bottom-right .seen-toast.exit { animation-name: toastSlideOutRight; }
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toastSlideOut {
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+}
+
+@keyframes toastSlideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastSlideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Ícones */
+.seen-toast .icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seen-toast .icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.seen-toast.success .icon { color: var(--toast-success); }
+.seen-toast.error .icon { color: var(--toast-error); }
+.seen-toast.warning .icon { color: var(--toast-warning); }
+.seen-toast.info .icon { color: var(--toast-info); }
+
+/* Conteúdo */
+.seen-toast .content {
+  flex: 1;
+  min-width: 0;
+}
+
+.seen-toast .title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.seen-toast .message {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  opacity: 0.9;
+  word-wrap: break-word;
+}
+
+/* Botões de ação */
+.seen-toast .actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.seen-toast .actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.light .actions button {
+  color: var(--toast-text-light);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.light .actions button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.dark .actions button {
+  color: var(--toast-text-dark);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark .actions button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.seen-toast .actions button.close {
+  padding: 4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Barra de progresso */
+.seen-toast .progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.2;
+  transform-origin: left;
+  transition: transform linear;
+}
+
+.seen-toast .progress-bar.animate {
+  animation: progress linear forwards;
+}
+
+@keyframes progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Responsivo */
+@media (max-width: 640px) {
+  .seen-toast {
+    width: calc(100vw - 32px);
+    max-width: none;
+  }
+  
+  .top-left, .top-right, .top-center {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    transform: none;
+  }
+  
+  .top-center {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .bottom-left, .bottom-right, .bottom-center {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+  }
+  
+  .bottom-center {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

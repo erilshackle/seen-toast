@@ -1,0 +1,17 @@
+{
+  "name": "seen-toast",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "main": "dist/seen.umd.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2",
+    "vite": "^8.0.10"
+  }
+}
