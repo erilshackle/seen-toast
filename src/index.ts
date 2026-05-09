@@ -8,12 +8,34 @@ export function initSeen() {
   initToastUI();
 }
 
-// Utilitários adicionais
-export const Seen = { 
+let globalConfig = {};
+
+export function configureSeen(config = {}) {
+  globalConfig = config;
+}
+
+export const Seen = {
+  initSeen,
+
+  config: configureSeen,
+
   toast,
+
+  success: toast.success,
+  error: toast.error,
+  warning: toast.warning,
+  info: toast.info,
+
   clearAll: () => store.clearAll(),
-  clearPosition: (position: string) => store.clearPosition(position)
+
+  clearPosition: (position: string) =>
+    store.clearPosition(position)
 };
 
-// Export default para uso mais simples
+if (typeof window !== "undefined") {
+  (window as any).Seen = Seen;
+
+  initSeen();
+}
+
 export default Seen;

@@ -23,13 +23,13 @@ export function createToastElement(toast: Toast): HTMLElement {
     ? `
       <div class="actions">
         ${toast.actions
-          .map(
-            action =>
-              `<button class="action-btn ${action.className || ""}">
+      .map(
+        action =>
+          `<button class="action-btn ${action.className || ""}">
                 ${escapeHtml(action.label)}
               </button>`
-          )
-          .join("")}
+      )
+      .join("")}
       </div>
     `
     : "";
@@ -38,18 +38,17 @@ export function createToastElement(toast: Toast): HTMLElement {
     ? `<button class="close-btn" aria-label="Close toast">✕</button>`
     : "";
 
-  const shouldShowProgress = toast.duration >= 2000;
+  const shouldShowProgress = toast.showProgress && toast.duration >= 2000;
 
   el.innerHTML = `
     ${closeHtml}
     ${iconHtml}
 
     <div class="content">
-      ${
-        toast.title
-          ? `<div class="title">${escapeHtml(toast.title)}</div>`
-          : ""
-      }
+      ${toast.title
+      ? `<div class="title">${escapeHtml(toast.title)}</div>`
+      : ""
+    }
 
       <div class="message">
         ${escapeHtml(toast.message)}
@@ -69,7 +68,7 @@ export function createToastElement(toast: Toast): HTMLElement {
 
   let paused = false;
 
-  if (toast.duration > 0) {
+  if (toast.actions.length < 2 && toast.duration > 0) {
     const progressBar = el.querySelector(
       ".progress-bar"
     ) as HTMLElement | null;

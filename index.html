@@ -5,9 +5,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>SeenToast Demo</title>
+  <title>SeenToast</title>
 
-  <link rel="stylesheet" href="./dist/seen-toast.css">
+  <meta name="description"
+    content="Minimal, modern and customizable toast notification library." />
+
+  <link rel="stylesheet" href="./dist/seentoast.css" />
 
   <style>
     * {
@@ -16,128 +19,186 @@
 
     body {
       margin: 0;
-      padding: 40px;
-      font-family: Inter, sans-serif;
-      background: #0f172a;
-      color: white;
-    }
+      padding: 60px 24px;
 
-    h1 {
-      margin-top: 0;
-      font-size: 2rem;
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      background:
+        radial-gradient(circle at top,
+          rgba(59, 130, 246, 0.12),
+          transparent 40%),
+        #0f172a;
+
+      color: #f8fafc;
+
+      min-height: 100vh;
     }
 
     .wrapper {
-      max-width: 1200px;
+      width: 100%;
+      max-width: 1100px;
       margin: 0 auto;
+    }
+
+    .hero {
+      margin-bottom: 48px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+
+      padding: 6px 12px;
+
+      border-radius: 999px;
+
+      background: rgba(255, 255, 255, 0.08);
+
+      border: 1px solid rgba(255, 255, 255, 0.08);
+
+      font-size: 13px;
+      font-weight: 500;
+
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: 1;
+
+      letter-spacing: -0.04em;
+    }
+
+    .subtitle {
+      margin-top: 18px;
+
+      max-width: 720px;
+
+      font-size: 18px;
+      line-height: 1.7;
+
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .grid {
       display: grid;
-      grid-template-columns: 350px 1fr;
-      gap: 32px;
-      margin-top: 32px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
     }
 
-    .panel {
-      background: rgba(255, 255, 255, 0.05);
+    .card {
+      padding: 22px;
+
+      border-radius: 18px;
+
+      background: rgba(255, 255, 255, 0.04);
+
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 24px;
+
+      backdrop-filter: blur(10px);
     }
 
-    .panel h2 {
-      margin-top: 0;
-      margin-bottom: 20px;
-      font-size: 1rem;
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
     }
 
-    .field {
-      margin-bottom: 18px;
-    }
+    .card p {
+      margin: 0 0 18px;
 
-    .field label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      opacity: 0.8;
-    }
+      color: rgba(255, 255, 255, 0.65);
 
-    .field input,
-    .field select,
-    .field textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.06);
-      color: white;
-      outline: none;
-    }
-
-    .field textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .row {
-      display: flex;
-      gap: 12px;
-    }
-
-    .row .field {
-      flex: 1;
-    }
-
-    .checkbox {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .checkbox input {
-      width: auto;
-    }
-
-    button {
-      border: none;
-      cursor: pointer;
-      border-radius: 12px;
-      padding: 14px 18px;
-      font-weight: 600;
-      width: 100%;
-      background: white;
-      color: black;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    .preview {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .help {
-      opacity: 0.7;
       font-size: 14px;
       line-height: 1.6;
     }
 
-    code {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 2px 6px;
-      border-radius: 6px;
+    button {
+      appearance: none;
+      border: none;
+      outline: none;
+
+      width: 100%;
+
+      padding: 12px 14px;
+
+      border-radius: 12px;
+
+      cursor: pointer;
+
+      font-size: 14px;
+      font-weight: 600;
+
+      transition:
+        transform 0.2s ease,
+        opacity 0.2s ease,
+        background 0.2s ease;
     }
 
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .primary {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .success {
+      background: #22c55e;
+      color: white;
+    }
+
+    .danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    .warning {
+      background: #f59e0b;
+      color: #111827;
+    }
+
+    .neutral {
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+    }
+
+    .footer {
+      margin-top: 56px;
+
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      color: rgba(255, 255, 255, 0.5);
+
+      font-size: 14px;
+    }
+
+    code {
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        monospace;
+
+      background: rgba(255, 255, 255, 0.08);
+
+      padding: 3px 8px;
+
+      border-radius: 8px;
     }
   </style>
 </head>
@@ -146,176 +207,190 @@
 
   <div class="wrapper">
 
-    <h1>SeenToast Playground</h1>
+    <section class="hero">
+      <div class="badge">
+        SeenToast
+      </div>
 
-    <div class="help">
-      Customize and preview toast notifications in real time.
-    </div>
+      <h1>
+        Modern toast notifications.
+      </h1>
 
-    <div class="grid">
+      <p class="subtitle">
+        Lightweight, customizable and framework agnostic toast notification library built with TypeScript.
+      </p>
+    </section>
 
-      <div class="panel">
+    <section class="grid">
 
-        <h2>Toast Options</h2>
+      <div class="card">
+        <h3>Basic Toast</h3>
 
-        <div class="field">
-          <label>Title</label>
-          <input type="text" id="title" placeholder="Notification title" />
-        </div>
+        <p>
+          Simple toast notification with default settings.
+        </p>
 
-        <div class="field">
-          <label>Message</label>
-          <textarea id="message">This is a SeenToast notification.</textarea>
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label>Type</label>
-
-            <select id="type">
-              <option value="success">success</option>
-              <option value="error">error</option>
-              <option value="warning">warning</option>
-              <option value="info">info</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Theme</label>
-
-            <select id="theme">
-              <option value="light">light</option>
-              <option value="dark" selected>dark</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label>Position</label>
-
-            <select id="position">
-              <option value="top-left">top-left</option>
-              <option value="top-center">top-center</option>
-              <option value="top-right">top-right</option>
-              <option value="bottom-left">bottom-left</option>
-              <option value="bottom-center" selected>bottom-center</option>
-              <option value="bottom-right">bottom-right</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Duration (ms)</label>
-            <input type="number" id="duration" value="4000" />
-          </div>
-        </div>
-
-        <div class="checkbox">
-          <input type="checkbox" id="closable" checked />
-          <label for="closable">Closable</label>
-        </div>
-
-        <div class="checkbox">
-          <input type="checkbox" id="pauseOnHover" checked />
-          <label for="pauseOnHover">Pause on hover</label>
-        </div>
-
-        <div class="checkbox">
-          <input type="checkbox" id="showIcon" checked />
-          <label for="showIcon">Show icon</label>
-        </div>
-
-        <div class="checkbox">
-          <input type="checkbox" id="actions" />
-          <label for="actions">Add action buttons</label>
-        </div>
-
-        <button id="showToast">
-          Show Toast
+        <button class="primary" onclick="basicToast()">
+          toast Toast
         </button>
-
       </div>
 
-      <div class="panel preview">
+      <div class="card">
+        <h3>Success</h3>
 
-        <h2>Usage Example</h2>
+        <p>
+          Success notification with auto dismiss.
+        </p>
 
-        <pre><code id="codePreview"></code></pre>
-
-        <div class="help">
-          Progress bar is automatically hidden for durations below <code>2000ms</code>.
-        </div>
-
+        <button class="success" onclick="successToast()">
+          Success Toast
+        </button>
       </div>
 
+      <div class="card">
+        <h3>Error</h3>
+
+        <p>
+          Error notification with dark theme.
+        </p>
+
+        <button class="danger" onclick="errorToast()">
+          Error Toast
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>Actions</h3>
+
+        <p>
+          Persistent toast with action buttons.
+        </p>
+
+        <button class="warning" onclick="actionsToast()">
+          Actions Toast
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>No Progress</h3>
+
+        <p>
+          Infinite toast without progress bar.
+        </p>
+
+        <button class="neutral" onclick="longToast()">
+          Persistent Toast
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>Custom Config</h3>
+
+        <p>
+          Global configuration example.
+        </p>
+
+        <button class="primary" onclick="configToast()">
+          Configure
+        </button>
+      </div>
+
+    </section>
+
+    <div class="footer">
+      <span>
+        CDN Ready
+      </span>
+
+      <span>
+        TypeScript
+      </span>
+
+      <span>
+        Framework Agnostic
+      </span>
+
+      <span>
+        <code>npm install seen-toast</code>
+      </span>
     </div>
 
   </div>
 
-  <script type="module">
-    import Seen, { initSeen } from "./dist/seen.es.js";
+  <script src="./dist/seentoast.umd.js"></script>
 
-    initSeen();
+  <script>
+    function basicToast() {
+      Seen.toast({
+        message: "Hello from SeenToast!",
+        position: "top-right"
+      });
+    }
 
-    const codePreview = document.getElementById("codePreview");
+    function successToast() {
+      Seen.success(
+        "Operation completed successfully",
+        {
+          position: "top-right"
+        }
+      );
+    }
 
-    function getOptions() {
-      const withActions = document.getElementById("actions").checked;
+    function errorToast() {
+      Seen.error(
+        "Something went wrong",
+        {
+          theme: "dark",
+          position: "top-right"
+        }
+      );
+    }
 
-      return {
-        title: document.getElementById("title").value,
-        message: document.getElementById("message").value,
-        type: document.getElementById("type").value,
-        theme: document.getElementById("theme").value,
-        position: document.getElementById("position").value,
-        duration: Number(document.getElementById("duration").value),
-        closable: document.getElementById("closable").checked,
-        pauseOnHover: document.getElementById("pauseOnHover").checked,
-        showIcon: document.getElementById("showIcon").checked,
+    function actionsToast() {
+      Seen.toast({
+        title: "Delete item",
+        message: "Are you sure you want to delete this item?",
+        type: "warning",
+        position: "bottom-right",
 
-        actions: withActions
-          ? [
-            {
-              label: "Cancel",
-              onClick: () => console.log("cancel")
-            },
-            {
-              label: "Confirm",
-              onClick: () => console.log("confirm")
+        actions: [
+          {
+            label: "Cancel",
+            onClick: () => {
+              console.log("cancel");
             }
-          ]
-          : []
-      };
+          },
+          {
+            label: "Delete",
+            onClick: () => {
+              console.log("delete");
+            }
+          }
+        ]
+      });
     }
 
-    function updateCodePreview() {
-      const options = getOptions();
-
-      codePreview.textContent =
-        `Seen.toast(${JSON.stringify(options, null, 2)});`;
+    function longToast() {
+      Seen.info(
+        "This toast is persistent and has no progress bar.",
+        {
+          duration: 0,
+          position: "top-center"
+        }
+      );
     }
 
-    [
-      "title",
-      "message",
-      "type",
-      "theme",
-      "position",
-      "duration",
-      "closable",
-      "pauseOnHover",
-      "showIcon",
-      "actions"
-    ].forEach(id => {
-      document.getElementById(id).addEventListener("input", updateCodePreview);
-      document.getElementById(id).addEventListener("change", updateCodePreview);
-    });
+    function configToast() {
+      Seen.config({
+        theme: "dark",
+        position: "top-right",
+        duration: 5000
+      });
 
-    updateCodePreview();
-
-    document.getElementById("showToast").addEventListener("click", () => {
-      Seen.toast(getOptions());
-    });
+      Seen.success(
+        "Global configuration updated."
+      );
+    }
   </script>
 
 </body>

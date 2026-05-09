@@ -1,4 +1,4 @@
-export type ToastType = "success" | "error" | "warning" | "info";
+export type ToastType = "success" | "error" | "warning" | "info" | "notification";
 export type ToastTheme = "light" | "dark";
 
 export type ToastPosition =
@@ -24,6 +24,7 @@ export interface ToastOptions {
   actions?: ToastAction[];
   className?: string;
   showIcon?: boolean; // Nova opção: mostrar ou não o ícone
+  showProgress?: boolean;
   onDismiss?: (toastId: string) => void;
   onShow?: (toastId: string) => void;
 }

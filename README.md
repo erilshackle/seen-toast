@@ -6,34 +6,35 @@ Minimal, modern and customizable toast notification library built with TypeScrip
 
 * Lightweight
 * TypeScript support
+* Zero dependencies
 * Multiple positions
 * Light and dark themes
 * Auto dismiss
 * Pause on hover
-* Progress bar
+* Animated progress bar
 * Action buttons
 * Closable notifications
 * Stack management
+* CDN support
 * Fully customizable
-* No dependencies
 
 ---
 
 # Installation
 
-Using npm:
+## npm
 
 ```bash
 npm install seentoast
 ```
 
-Using pnpm:
+## pnpm
 
 ```bash
 pnpm add seentoast
 ```
 
-Using yarn:
+## yarn
 
 ```bash
 yarn add seentoast
@@ -41,17 +42,35 @@ yarn add seentoast
 
 ---
 
-# Basic Usage
+# Usage
+
+## ESM / Bundlers
 
 ```ts
-import Seen, { initSeen } from "seentoast";
-
-initSeen();
+import Seen from "seentoast";
 
 Seen.toast({
   message: "Hello world"
 });
 ```
+
+---
+
+# CDN Usage
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/seentoast/dist/seentoast.css">
+
+<script src="https://unpkg.com/seentoast/dist/seentoast.umd.js"></script>
+
+<script>
+  Seen.toast({
+    message: "Hello from CDN"
+  });
+</script>
+```
+
+SeenToast initializes automatically in browser environments.
 
 ---
 
@@ -65,29 +84,6 @@ Seen.toast.error("Something went wrong");
 Seen.toast.warning("Be careful");
 
 Seen.toast.info("New update available");
-```
-
----
-
-# Initialization
-
-The UI container must be initialized once.
-
-```ts
-import { initSeen } from "seentoast";
-
-initSeen();
-```
-
-Usually this should be done in your app entry file.
-
-Example:
-
-```ts
-// main.ts
-import { initSeen } from "seentoast";
-
-initSeen();
 ```
 
 ---
@@ -173,6 +169,8 @@ Seen.toast({
 });
 ```
 
+Action buttons automatically stay grouped on a single row and wrap only when necessary.
+
 ---
 
 # Manual Dismiss
@@ -223,7 +221,9 @@ The progress bar is automatically displayed when:
 duration >= 2000
 ```
 
-Short-lived notifications do not show a progress bar.
+Short-lived notifications do not display a progress bar.
+
+The progress bar automatically syncs with the remaining toast lifetime.
 
 ---
 
@@ -238,9 +238,10 @@ Seen.toast({
 
 When the user hovers the toast:
 
-* the timer pauses
+* the dismiss timer pauses
 * the progress bar pauses
-* dismiss resumes after mouse leave
+* the remaining duration is preserved
+* the timer resumes on mouse leave
 
 ---
 
@@ -268,13 +269,13 @@ Seen.toast({
 
 # Clear Notifications
 
-Clear all:
+## Clear all
 
 ```ts
 Seen.clearAll();
 ```
 
-Clear by position:
+## Clear by position
 
 ```ts
 Seen.clearPosition("top-right");
@@ -302,21 +303,25 @@ Seen.toast({
 
 # Styling
 
-You can customize the appearance using CSS.
+You can fully customize the appearance using CSS.
 
 Main classes:
 
 ```css
 .seen-container
 .seen-toast
+
 .seen-toast.light
 .seen-toast.dark
+
 .seen-toast.success
 .seen-toast.error
 .seen-toast.warning
 .seen-toast.info
+
 .progress-bar
 .close-btn
+
 .actions
 .action-btn
 ```
@@ -326,9 +331,7 @@ Main classes:
 # Example
 
 ```ts
-import Seen, { initSeen } from "seentoast";
-
-initSeen();
+import Seen from "seentoast";
 
 Seen.toast.success("Profile updated");
 
@@ -347,16 +350,6 @@ Seen.toast({
 ---
 
 # API
-
-## initSeen
-
-```ts
-initSeen(): void
-```
-
-Initializes the toast container.
-
----
 
 ## Seen.toast
 
@@ -409,6 +402,28 @@ import type {
   ToastPosition
 } from "seentoast";
 ```
+
+---
+
+# Build Outputs
+
+SeenToast provides multiple builds:
+
+| File               | Description     |
+| ------------------ | --------------- |
+| `seentoast.es.js`  | ES Module build |
+| `seentoast.umd.js` | UMD / CDN build |
+| `seentoast.css`    | Stylesheet      |
+
+---
+
+# Browser Support
+
+SeenToast works in all modern browsers supporting:
+
+* ES2020+
+* CSS backdrop-filter
+* CSS flexbox/grid
 
 ---
 

@@ -1,17 +1,44 @@
 {
   "name": "seen-toast",
-  "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "Modern, lightweight and customizable toast notification library.",
   "type": "module",
-  "types": "dist/index.d.ts",
-  "main": "dist/seen.umd.js",
+  "main": "./dist/seentoast.umd.js",
+  "module": "./dist/seentoast.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/seentoast.es.js",
+      "require": "./dist/seentoast.umd.js"
+    },
+    "./style.css": "./dist/seentoast.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "toast",
+    "notification",
+    "typescript",
+    "javascript",
+    "ui",
+    "toast-library",
+    "frontend"
+  ],
+  "homepage": "https://github.com/erilshackle/seen-toast",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erilshackle/seen-toast.git"
+  },
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc -p tsconfig.build.json && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "typescript": "~6.0.2",
-    "vite": "^8.0.10"
+    "typescript": "^5.9.2",
+    "vite": "^7.1.3"
   }
 }
