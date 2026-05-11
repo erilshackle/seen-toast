@@ -19,7 +19,7 @@ export default defineConfig({
         exports: "named",
 
         assetFileNames: (assetInfo) => {
-          if (assetInfo.name === "style.css") {
+          if (assetInfo.names[0] === "style.css") {
             return "seentoast.css";
           }
 

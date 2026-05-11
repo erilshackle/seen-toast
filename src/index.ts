@@ -33,9 +33,11 @@ export const Seen = {
 };
 
 if (typeof window !== "undefined") {
-  (window as any).Seen = Seen;
-
-  initSeen();
+  // Evita rodar o init se o usuário quiser controlar isso manualmente
+  if (!(window as any).Seen) {
+    (window as any).Seen = Seen;
+    // Opcional: initSeen() automático pode ser configurado via data-attributes no script
+  }
 }
 
 export default Seen;

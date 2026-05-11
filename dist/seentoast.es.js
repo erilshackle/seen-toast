@@ -38,7 +38,7 @@ class S {
     }), this.toasts = this.toasts.filter((s) => s.position !== e), this.notify();
   }
 }
-const u = new S(), $ = {
+const u = new S(), L = {
   success: `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"></circle>
@@ -73,10 +73,10 @@ const u = new S(), $ = {
     </svg>
   `
 };
-function B(t) {
+function $(t) {
   const e = document.createElement("div");
   e.className = `seen-toast ${t.theme} ${t.type} ${t.className || ""}`, e.setAttribute("data-toast-id", t.id), e.setAttribute("role", "alert"), e.setAttribute("aria-live", "polite");
-  const s = t.showIcon !== !1 ? `<div class="icon">${$[t.type]}</div>` : "", r = t.actions.length > 0 ? `
+  const s = t.showIcon !== !1 ? `<div class="icon">${L[t.type]}</div>` : "", r = t.actions.length > 0 ? `
       <div class="actions">
         ${t.actions.map(
     (d) => `<button class="action-btn ${d.className || ""}">
@@ -107,40 +107,40 @@ function B(t) {
       ".progress-bar"
     ), v = () => {
       if (p) return;
-      const E = Date.now(), C = E - m;
-      a -= C, m = E;
-      const L = Math.max(0, a / t.duration);
-      if (d && (d.style.transform = `scaleX(${L})`), a <= 0) {
-        g(e, t.id);
+      const E = Date.now(), T = E - m;
+      a -= T, m = E;
+      const C = Math.max(0, a / t.duration);
+      if (d && (d.style.transform = `scaleX(${C})`), a <= 0) {
+        w(e, t.id);
         return;
       }
       l = requestAnimationFrame(v);
     }, f = () => {
       m = Date.now(), h = window.setTimeout(() => {
-        g(e, t.id);
+        w(e, t.id);
       }, a), l = requestAnimationFrame(v);
-    }, w = () => {
+    }, g = () => {
       p || (p = !0, h && (clearTimeout(h), h = null), l && (cancelAnimationFrame(l), l = null));
-    }, T = () => {
+    }, k = () => {
       p && (p = !1, f());
     };
-    t.pauseOnHover && (e.addEventListener("mouseenter", w), e.addEventListener("mouseleave", T)), f(), e._cleanupTimers = () => {
+    t.pauseOnHover && (e.addEventListener("mouseenter", g), e.addEventListener("mouseleave", k)), f(), e._cleanupTimers = () => {
       h && clearTimeout(h), l && cancelAnimationFrame(l);
     };
   }
   const M = e.querySelector(".close-btn");
   return M && M.addEventListener("click", (d) => {
-    d.stopPropagation(), g(e, t.id);
+    d.stopPropagation(), w(e, t.id);
   }), e.querySelectorAll(".action-btn").forEach((d, v) => {
     const f = t.actions[v];
-    f?.onClick && d.addEventListener("click", (w) => {
-      w.stopPropagation(), f.onClick(t.id), f.dismiss !== !1 && g(e, t.id);
+    f?.onClick && d.addEventListener("click", (g) => {
+      g.stopPropagation(), f.onClick(t.id), f.dismiss !== !1 && w(e, t.id);
     });
   }), requestAnimationFrame(() => {
     e.classList.add("enter"), t.onShow?.(t.id);
   }), e;
 }
-function g(t, e) {
+function w(t, e) {
   if (t.classList.contains("exit")) return;
   t._cleanupTimers && t._cleanupTimers(), t.classList.add("exit");
   const n = () => {
@@ -154,7 +154,7 @@ function b(t) {
   const e = document.createElement("div");
   return e.textContent = t, e.innerHTML;
 }
-class D {
+class B {
   containers = /* @__PURE__ */ new Map();
   unsubscribe;
   elementsMap = /* @__PURE__ */ new Map();
@@ -187,7 +187,7 @@ class D {
       const c = this.getContainer(i);
       (i.startsWith("bottom") ? [...r].reverse() : r).forEach((l, m) => {
         let a = this.elementsMap.get(l.id);
-        a || (a = B(l), this.elementsMap.set(l.id, a)), a.parentElement !== c ? c.appendChild(a) : c.children[m] !== a && c.insertBefore(a, c.children[m] || null);
+        a || (a = $(l), this.elementsMap.set(l.id, a)), a.parentElement !== c ? c.appendChild(a) : c.children[m] !== a && c.insertBefore(a, c.children[m] || null);
       });
     });
   }
@@ -196,10 +196,10 @@ class D {
   }
 }
 let y = null;
-function x() {
-  return y || (y = new D()), y;
+function D() {
+  return y || (y = new B()), y;
 }
-let P = {
+let x = {
   position: "bottom-center",
   theme: "light",
   duration: 3e3,
@@ -208,13 +208,13 @@ let P = {
   pauseOnWindowBlur: !0,
   showIcon: !0
 };
-const H = () => crypto.randomUUID();
+const P = () => crypto.randomUUID();
 function o(t) {
   const e = {
-    ...P,
+    ...x,
     ...t
   }, s = e.actions && e.actions.length > 1 ? 0 : 3e3, i = {
-    id: H(),
+    id: P(),
     title: e.title ?? "",
     message: e.message,
     type: e.type ?? "info",
@@ -244,13 +244,13 @@ o.success = (t, e) => o({ ...e, message: t, type: "success" });
 o.error = (t, e) => o({ ...e, message: t, type: "error" });
 o.warning = (t, e) => o({ ...e, message: t, type: "warning" });
 o.info = (t, e) => o({ ...e, message: t, type: "info" });
-function k() {
-  x();
+function H() {
+  D();
 }
 function I(t = {}) {
 }
 const O = {
-  initSeen: k,
+  initSeen: H,
   config: I,
   toast: o,
   success: o.success,
@@ -260,10 +260,10 @@ const O = {
   clearAll: () => u.clearAll(),
   clearPosition: (t) => u.clearPosition(t)
 };
-typeof window < "u" && (window.Seen = O, k());
+typeof window < "u" && (window.Seen || (window.Seen = O));
 export {
   O as Seen,
   I as configureSeen,
   O as default,
-  k as initSeen
+  H as initSeen
 };
